@@ -35,19 +35,19 @@ class TodoController extends Controller
         ],200);
     }
 
-    public function update(Request $request, Todo $todo)
+    public function update(Request $request, Todo $todo) //$todo is the one we passed from the route as todos/{todo}. This is called route model binding.
     {
         if(!$todo){
             return response()->json([
                 'success' => 'false',
                 'message' => 'Todo with this id does not exist'
-            ], 404);
+            ], 422);
         }
 
         if($request->title){
             $todo->title = $request->title;
         }
-        
+
         if($request->done)
         {
             $todo->done = $request->done;
@@ -57,7 +57,24 @@ class TodoController extends Controller
 
         return response()->json([
             'success' => 'true',
-            'message' => 'Todo update successfuly'
-        ]);
+            'message' => 'Todo update successfully'
+        ],200);
+    }
+
+    public function delete(Todo $todo)
+    {
+        if(!$todo){
+            return response()->json([
+                'success' => 'false',
+                'message' => 'Todo with this id does not exist'
+            ], 404);
+        }
+
+        $todo->delete();
+
+        return response()->json([
+            'success' => 'true',
+            'message' => 'Todo deleted successfully'
+        ], 200);
     }
 }
